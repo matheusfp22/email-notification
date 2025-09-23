@@ -3,7 +3,7 @@ package org.example.emailnotification.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.example.emailnotification.dto.request.EmailMimeRequestDto;
-import org.example.emailnotification.dto.request.EmailRequestDto;
+import org.example.emailnotification.dto.request.EmailSimpleRequestDto;
 import org.example.emailnotification.entity.EmailHistoryEntity;
 import org.example.emailnotification.repository.EmailHistoryRepository;
 import org.springframework.mail.MailException;
@@ -27,8 +27,14 @@ public class EmailService {
         this.emailHistoryRepository = emailHistoryRepository;
     }
 
-    public void sendSimpleEmail(EmailRequestDto request) {
-        EmailHistoryEntity emailHistory = new EmailHistoryEntity();
+    public void sendSimpleEmail(EmailSimpleRequestDto request) {
+        EmailHistoryEntity emailHistory = EmailHistoryEntity.builder()
+                .receiver(request.getTo())
+                .subject(request.getSubject())
+                .message(request.getMessage())
+                .status("SENT")
+                .createdAt(LocalDateTime.now())
+                .build();
 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -39,16 +45,9 @@ public class EmailService {
             message.setText(request.getMessage());
 
             mailSender.send(message);
-
-            emailHistory.setReceiver(request.getTo());
-            emailHistory.setSubject(request.getSubject());
-            emailHistory.setMessage(request.getMessage());
-            emailHistory.setStatus("SENT");
-            emailHistory.setCreatedAt(LocalDateTime.now());
-
-            emailHistoryRepository.save(emailHistory);
         } catch (MailException m) {
-            emailHistory.setStatus("FAILED: " + m.getMessage());
+            emailHistory.setStatus("FAILED");
+            emailHistory.setError(m.getMessage());
         } finally {
             emailHistoryRepository.save(emailHistory);
         }
@@ -56,7 +55,13 @@ public class EmailService {
     }
 
     public void sendMimeEmail(EmailMimeRequestDto request) {
-        EmailHistoryEntity emailHistory = new EmailHistoryEntity();
+        EmailHistoryEntity emailHistory = EmailHistoryEntity.builder()
+                .receiver(request.getTo())
+                .subject(request.getSubject())
+                .message(request.getMessage())
+                .status("SENT")
+                .createdAt(LocalDateTime.now())
+                .build();
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -83,16 +88,9 @@ public class EmailService {
             }
 
             mailSender.send(mimeMessage);
-
-            emailHistory.setReceiver(request.getTo());
-            emailHistory.setSubject(request.getSubject());
-            emailHistory.setMessage(request.getMessage());
-            emailHistory.setStatus("SENT");
-            emailHistory.setCreatedAt(LocalDateTime.now());
-
-            emailHistoryRepository.save(emailHistory);
         } catch (MessagingException | MailException m) {
-            emailHistory.setStatus("FAILED: " + m.getMessage());
+            emailHistory.setStatus("FAILED");
+            emailHistory.setError(m.getMessage());
         } finally {
             emailHistoryRepository.save(emailHistory);
         }

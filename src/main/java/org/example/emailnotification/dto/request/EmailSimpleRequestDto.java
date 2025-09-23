@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EmailRequestDto {
+public class EmailSimpleRequestDto implements EmailMessage {
 
     private String to;
     private String subject;

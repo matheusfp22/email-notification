@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # conexão da app
+      - "15672:15672"   # painel admin
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
