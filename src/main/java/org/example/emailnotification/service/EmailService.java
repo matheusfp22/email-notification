@@ -33,6 +33,7 @@ public class EmailService {
 
     public void sendSimpleEmail(EmailSimpleRequestDto request) {
         EmailHistoryEntity email = EmailHistoryEntity.builder()
+                .sender("noreply@mail.com")
                 .receiver(request.getTo())
                 .subject(request.getSubject())
                 .message(request.getMessage())
@@ -43,7 +44,7 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
 
-            message.setFrom("noreply@mail.com");
+            message.setFrom(email.getSender());
             message.setTo(email.getReceiver());
             message.setSubject(email.getSubject());
             message.setText(email.getMessage());
@@ -60,6 +61,7 @@ public class EmailService {
 
     public void sendMimeEmail(EmailMimeQueueRequestDto request) {
         EmailHistoryEntity email = EmailHistoryEntity.builder()
+                .sender("noreply@mail.com")
                 .receiver(request.getTo())
                 .subject(request.getSubject())
                 .message(request.getMessage())
@@ -73,7 +75,7 @@ public class EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-            helper.setFrom("noreply@mail.com");
+            helper.setFrom(email.getSender());
             helper.setTo(email.getReceiver());
             helper.setSubject(email.getSubject());
 

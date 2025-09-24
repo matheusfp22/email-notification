@@ -24,7 +24,7 @@ public class EmailConsumer {
             } else if (email instanceof EmailMimeQueueRequestDto mimeEmail) {
                 emailService.sendMimeEmail(mimeEmail);
             } else {
-                System.err.println("Mensagem recebida com tipo desconhecido: " + email.getClass());
+                System.err.println("Received message with unknown type: " + email.getClass());
             }
         } catch (Exception e) {
             System.err.println("Error processing email from queue: " + e.getMessage());

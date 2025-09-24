@@ -1,5 +1,6 @@
 package org.example.emailnotification.controller;
 
+import jakarta.validation.Valid;
 import org.example.emailnotification.dto.request.EmailMimeQueueRequestDto;
 import org.example.emailnotification.dto.request.EmailMimeRequestDto;
 import org.example.emailnotification.dto.request.EmailSimpleRequestDto;
@@ -26,13 +27,13 @@ public class EmailController {
     }
 
     @PostMapping("send-simple")
-    public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailSimpleRequestDto request) {
+    public ResponseEntity<String> sendSimpleEmail(@RequestBody @Valid EmailSimpleRequestDto request) {
         emailProducer.sendEmail(request);
         return ResponseEntity.ok("Email added to sending queue.");
     }
 
     @PostMapping(value = "send-mime", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> sendMimeEmail(@ModelAttribute EmailMimeRequestDto request) {
+    public ResponseEntity<String> sendMimeEmail(@ModelAttribute @Valid EmailMimeRequestDto request) {
         String imagePath = null;
         if (request.getImage() != null && !request.getImage().isEmpty()) {
             imagePath = storageService.save(request.getImage());

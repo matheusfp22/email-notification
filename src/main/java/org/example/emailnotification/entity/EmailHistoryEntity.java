@@ -19,6 +19,8 @@ public class EmailHistoryEntity {
     @Id
     private String id;
 
+    private String sender;
+
     private String receiver;
 
     private String subject;
