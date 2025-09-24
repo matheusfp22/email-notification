@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +26,10 @@ public class EmailHistoryEntity {
     private String message;
 
     private String status;
+
+    private String imagePath;
+
+    private List<String> attachments;
 
     private String error;
 
